@@ -234,8 +234,8 @@ __attribute__((weak)) void keyball_on_apply_motion_to_mouse_scroll(keyball_motio
     }
 #endif
     // スクロールを反転
-    r->v = -r->v;
-    r->h = -r->h;
+    // r->v = -r->v;
+    // r->h = -r->h;
 }
 
 static void motion_to_mouse(keyball_motion_t *m, report_mouse_t *r, bool is_left, bool as_scroll) {
