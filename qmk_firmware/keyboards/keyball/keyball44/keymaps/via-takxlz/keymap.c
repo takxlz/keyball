@@ -26,13 +26,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_universal(
     KC_ESC           , LT(4,KC_Q)  , KC_W  , KC_E  , KC_R  , KC_T  ,          KC_Y  , KC_U  , KC_I     , KC_O    , KC_P           , KC_BSPC  ,
     LCTL_T(KC_TAB)   , LT(1,KC_A)  , KC_S  , KC_D  , KC_F  , KC_G  ,          KC_H  , KC_J  , KC_K     , KC_L    , LT(1,KC_SCLN)  , RCTL_T(KC_ENT)  ,
-    KC_LSFT          , LT(3,KC_Z)  , KC_X  , KC_C  , KC_V  , KC_B  ,          KC_N  , KC_M  , KC_COMM  , KC_DOT  , LT(3,KC_MINS)  , RSFT_T(KC_INT1)  ,
+    KC_LSFT          , LT(2,KC_Z)  , KC_X  , KC_C  , KC_V  , KC_B  ,          KC_N  , KC_M  , KC_COMM  , KC_DOT  , LT(2,KC_MINS)  , RSFT_T(KC_INT1)  ,
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    KC_LALT  , KC_LGUI       , LT(1,KC_LNG2) , KC_SPC  , LT(2,KC_ENT) ,          LT(2,KC_BSPC)  , LT(1,KC_LNG1)    , XXXXXXX  , XXXXXXX     , KC_RGUI
+    KC_LALT  , KC_LGUI       , LT(2,KC_LNG2) , KC_SPC  , LT(3,KC_ENT) ,          LT(3,KC_BSPC)  , LT(2,KC_LNG1)    , XXXXXXX  , XXXXXXX     , KC_RGUI
+  ),
+
+  // マウスレイヤー
+  [1] = LAYOUT_universal(
+    _______  , _______  , _______  , _______  , _______  , _______  ,          _______  , _______  , _______  , _______  , _______  , _______  ,
+    _______  , _______  , _______  , _______  , _______  , _______  ,          KC_BTN4  , KC_BTN1  , KC_BTN2  , KC_BTN5  , _______  , _______  ,
+    _______  , _______  , _______  , _______  , _______  , _______  ,          _______  , _______  , _______  , _______  , _______  , _______  ,
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    _______  , _______       , _______  ,  _______  , _______  ,               KC_BTN1  , KC_BTN2        , XXXXXXX , XXXXXXX        , _______
   ),
 
   // 数字、記号レイヤー（スクロールモード）
-  [1] = LAYOUT_universal(
+  [2] = LAYOUT_universal(
     _______  , KC_1     , KC_2     , KC_3     , KC_4     , KC_5 ,             KC_6     , KC_7  , KC_8  , KC_9  , KC_0     , KC_LBRC  ,
     _______  , _______  , _______  , KC_ASTR  , KC_LPRN  , _______ ,          KC_0     , KC_4  , KC_5  , KC_6  , KC_QUOT  , KC_EQL  ,
     _______  , _______  , _______  , KC_RBRC  , KC_NUHS  , _______ ,          _______  , KC_1  , KC_2  , KC_3  , KC_SLSH  , RSFT_T(KC_INT3)  ,
@@ -41,18 +50,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   // 移動レイヤー
-  [2] = LAYOUT_universal(
+  [3] = LAYOUT_universal(
     _______  , _______  , _______  , _______  , _______  , _______  ,          KC_HOME  , KC_END   , KC_PGUP  , KC_PGDN  , _______  , _______  ,
     _______  , _______  , _______  , _______  , _______  , _______  ,          KC_LEFT  , KC_DOWN  , KC_UP    , KC_RGHT  , _______  , _______  ,
-    _______  , _______  , _______  , _______  , _______  , _______  ,          _______  , _______  , _______  , _______  , _______  , _______  ,
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    _______  , _______       , _______  ,  _______  , _______  ,               _______  , _______        , XXXXXXX , XXXXXXX        , _______
-  ),
-
-  // マウスレイヤー
-  [3] = LAYOUT_universal(
-    _______  , _______  , _______  , _______  , _______  , _______  ,          _______  , _______  , _______  , _______  , _______  , _______  ,
-    _______  , _______  , _______  , _______  , _______  , _______  ,          KC_BTN4  , KC_BTN1  , KC_BTN2  , KC_BTN5  , _______  , _______  ,
     _______  , _______  , _______  , _______  , _______  , _______  ,          _______  , _______  , _______  , _______  , _______  , _______  ,
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     _______  , _______       , _______  ,  _______  , _______  ,               _______  , _______        , XXXXXXX , XXXXXXX        , _______
@@ -70,8 +70,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // clang-format on
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    // Auto enable scroll mode when the highest layer is 1
-    keyball_set_scroll_mode(get_highest_layer(state) == 1);
+    // スクロールモード
+    // NOTE: マウスレイヤーよりも後ろのレイヤーを設定すること
+    // オートマウスとスクロールモードのレイヤーが同時に有効になると後ろのレイヤーが優先させるため、スクロールモードが前にあるとスクロールされない
+    keyball_set_scroll_mode(get_highest_layer(state) == 2);
     return state;
 }
 
