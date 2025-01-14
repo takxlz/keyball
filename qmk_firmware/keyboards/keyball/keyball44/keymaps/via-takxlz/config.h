@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAP_CODE_DELAY 5
 
+#define TAPPING_TERM 10
+
 // Mod-Tapでホールド期間に入る前でも、他のキーが重ねられた時点でホールドとする
 #define PERMISSIVE_HOLD
 // Mod-Tapでホールド期間に入ったものは、確実にホールドと判定する
