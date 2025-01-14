@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
+// Mod-Tapでホールド期間に入る前でも、他のキーが重ねられた時点でホールドとする
+#define PERMISSIVE_HOLD
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // デフォルトレイヤー
