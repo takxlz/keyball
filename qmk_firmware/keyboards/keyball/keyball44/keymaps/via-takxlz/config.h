@@ -39,8 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Mod-Tapでホールド期間に入る前でも、他のキーが重ねられた時点でホールドとする
 #define PERMISSIVE_HOLD
-// Mod-Tapでホールド期間に入ったものは、確実にホールドと判定する
-#define TAPPING_FORCE_HOLD
 
 // レイヤー数
 #define DYNAMIC_KEYMAP_LAYER_COUNT 5
