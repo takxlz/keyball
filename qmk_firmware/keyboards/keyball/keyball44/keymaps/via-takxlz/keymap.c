@@ -25,7 +25,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // デフォルトレイヤー
   [0] = LAYOUT_universal(
     KC_ESC ,         KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,               KC_Y  , KC_U  , KC_I     , KC_O    , KC_P ,      KC_BSPC ,
-    LCTL_T(KC_TAB) , KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,               KC_H  , KC_J  , KC_K     , KC_L    , KC_SCLN ,   RCTL_T(KC_ENT) ,
+    LCTL_T(KC_TAB) , KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,               KC_H  , KC_J  , KC_K     , KC_L    , KC_LBRC ,   RCTL_T(KC_ENT) ,
     KC_LSFT ,        KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,               KC_N  , KC_M  , KC_COMM  , KC_DOT  , S(KC_SLSH) ,   RSFT_T(KC_INT1) ,
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     KC_LGUI  , KC_LALT       , LT(2,KC_SPC) ,  MO(3) , KC_BTN1 ,           KC_LNG2  , LT(1,KC_LNG1)    , XXXXXXX  , XXXXXXX     , KC_RGUI
@@ -43,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // 数字、Fnレイヤー（スクロールモード）
   [2] = LAYOUT_universal(
     KC_F11 ,    KC_F1    , KC_F2    , KC_F3    , KC_F4    , KC_F5   ,          KC_F6       , KC_F7       , KC_F8    , KC_F9       , KC_F10 ,    KC_F12  ,
-    KC_EQL ,    KC_1     , KC_2     , KC_3     , KC_4     , KC_5    ,          KC_6        , KC_7        , KC_8     , KC_9        , KC_0 ,      KC_LBRC  ,
+    _______ ,   KC_1     , KC_2     , KC_3     , KC_4     , KC_5    ,          KC_6        , KC_7        , KC_8     , KC_9        , KC_0 ,      _______  ,
     _______ ,   _______  , _______  , _______  , _______  , _______ ,          S(KC_MINS)  , S(KC_SCLN)  , KC_MINS  , S(KC_QUOT)  , KC_SLSH ,   KC_INT3  ,
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     _______  , _______       , _______  ,  _______  , _______  ,              _______  , MO(4)        , XXXXXXX , XXXXXXX        , _______
@@ -51,9 +51,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
    // 記号レイヤー（スクロールモード）
   [3] = LAYOUT_universal(
-    _______ ,     _______  , _______  , _______  , _______  , _______ ,      _______  , _______  , KC_RBRC     , KC_NUHS     , _______ ,      _______  ,
-    S(KC_EQL) ,   S(KC_1)  , S(KC_2)  , S(KC_3)  , S(KC_4)  , S(KC_5) ,      S(KC_6)  , S(KC_7)  , S(KC_8)     , S(KC_9)     , KC_QUOT ,      S(KC_LBRC)  ,
-    _______ ,     _______  , _______  , _______  , _______  , _______ ,      _______  , _______  , S(KC_RBRC)  , S(KC_NUHS)  , S(KC_SLSH) ,   S(KC_INT3)  ,
+    _______ ,     _______  , _______  , _______  , _______  , _______ ,      _______  , S(KC_LBRC)  , KC_RBRC     , KC_NUHS     , _______ ,      _______  ,
+    KC_EQL ,      S(KC_1)  , S(KC_2)  , S(KC_3)  , S(KC_4)  , S(KC_5) ,      S(KC_6)  , S(KC_7)     , S(KC_8)     , S(KC_9)     , KC_QUOT ,      KC_SCLN  ,
+    S(KC_EQL) ,   _______  , _______  , _______  , _______  , _______ ,      _______  , _______     , S(KC_RBRC)  , S(KC_NUHS)  , _______ ,   S(KC_INT3)  ,
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     _______  , _______       , _______  ,  _______  , _______  ,              _______  , _______        , XXXXXXX , XXXXXXX        , _______
   ),
