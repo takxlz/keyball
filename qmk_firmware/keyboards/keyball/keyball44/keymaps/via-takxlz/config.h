@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAPPING_TERM 200
 
 // Mod-Tapでホールド期間に入る前でも、他のキーが重ねられた時点でホールドとする
-#define PERMISSIVE_HOLD
+// #define PERMISSIVE_HOLD
 
 // レイヤー数
 #define DYNAMIC_KEYMAP_LAYER_COUNT 5
