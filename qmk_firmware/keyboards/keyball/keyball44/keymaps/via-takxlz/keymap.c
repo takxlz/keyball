@@ -28,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     LCTL_T(KC_TAB) , KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,               KC_H  , KC_J  , KC_K     , KC_L    , KC_LBRC ,   RCTL_T(KC_ENT) ,
     KC_LSFT ,        KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,               KC_N  , KC_M  , KC_COMM  , KC_DOT  , S(KC_SLSH) ,   RSFT_T(KC_INT1) ,
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    KC_LGUI  , KC_LALT       , LT(2,KC_SPC) ,  MO(3) , KC_BTN1 ,           KC_LNG2  , LT(1,KC_LNG1)    , XXXXXXX  , XXXXXXX     , KC_MINS
+    KC_LGUI  , KC_LALT       , MO(3) ,  LT(2,KC_SPC) , KC_BTN1 ,           KC_LNG2  , LT(1,KC_LNG1)    , XXXXXXX  , XXXXXXX     , KC_MINS
   ),
 
   // マウス、設定レイヤー
