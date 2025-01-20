@@ -33,7 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#    define RGBLIGHT_EFFECT_TWINKLE
 #endif
 
-#define TAP_CODE_DELAY 5
+// RDPでS(xxx)が効かない問題の対処
+#define TAP_CODE_DELAY 10
+#define USB_POLLING_INTERVAL_MS 5
 
 #define TAPPING_TERM 180
 
