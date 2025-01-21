@@ -21,9 +21,9 @@ enum {
   _BASE = 0, // ベース（QWERTY）
   _MOUSE,    // マウス
   _NUM,      // 数字
-  _FN,       // ファンクション
   _SYM,      // 記号
   _MV,       // 移動
+  _FN,       // ファンクション
 };
 
 // カスタムキーコード
@@ -37,7 +37,7 @@ enum {
 // TDキーコード定義
 enum {
   TD_LANG = 0, // 言語切替
-  TD_NMFN,     // 数字・FN切替
+  TD_NMSM,     // 数字・記号切替
   TD_MBTN,     // マウス
 };
 
@@ -95,27 +95,24 @@ void td_lang_reset(tap_dance_state_t *state, void *user_data) {
   td_state = 0;
 }
 
-// [TD_NMFN]
-void td_nmfn_finished(tap_dance_state_t *state, void *user_data) {
+// [TD_NMSM]
+void td_nmsm_finished(tap_dance_state_t *state, void *user_data) {
   td_state = cur_dance(state);
   // 数字レイヤー
   if (td_state == SINGLE_HOLD) {
     layer_on(_NUM);
-  // FNレイヤー
+  // 記号レイヤー
   } else if (td_state == SINGLE_TAP_HOLD) {
-    layer_on(_FN);
-  // スペース
-  } else if (td_state == SINGLE_TAP) {
-    tap_code(KC_SPC);
+    layer_on(_SYM);
   }
 }
-void td_nmfn_reset(tap_dance_state_t *state, void *user_data) {
+void td_nmsm_reset(tap_dance_state_t *state, void *user_data) {
   // 数字レイヤー
   if (td_state == SINGLE_HOLD) {
     layer_off(_NUM);
-  // FNレイヤー
+  // 記号レイヤー
   } else if (td_state == SINGLE_TAP_HOLD) {
-    layer_off(_FN);
+    layer_off(_SYM);
   }
   td_state = 0;
 }
@@ -149,7 +146,7 @@ void td_mbtn_reset(tap_dance_state_t *state, void *user_data) {
 // TD割り当て
 tap_dance_action_t tap_dance_actions[] = {
     [TD_LANG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_lang_finished, td_lang_reset),
-    [TD_NMFN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_nmfn_finished, td_nmfn_reset),
+    [TD_NMSM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_nmsm_finished, td_nmsm_reset),
     [TD_MBTN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mbtn_finished, td_mbtn_reset),
 };
 #endif
@@ -159,15 +156,15 @@ tap_dance_action_t tap_dance_actions[] = {
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // デフォルト
-  [0] = LAYOUT_universal(
+  [_BASE] = LAYOUT_universal(
     KC_ESC         , KC_Q , KC_W , KC_E , KC_R , KC_T ,               KC_Y  , KC_U , KC_I    , KC_O   , KC_P            , KC_BSPC                 ,
-    LCTL_T(KC_TAB) , KC_A , KC_S , KC_D , KC_F , KC_G ,               KC_H  , KC_J , KC_K    , KC_L   , KC_MINS/* -= */ , RCTL_T(KC_ENT)          ,
+    LCTL_T(KC_TAB) , KC_A , KC_S , KC_D , KC_F , KC_G ,               KC_H  , KC_J , KC_K    , KC_L   , KC_MINS/* -= */ , KC_ENT          ,
     KC_LSFT        , KC_Z , KC_X , KC_C , KC_V , KC_B ,               KC_N  , KC_M , KC_COMM , KC_DOT , KC_SLSH/* /? */ , RSFT_T(KC_INT1)/* \_ */ ,
-    KC_LALT , KC_LGUI     , MO(_SYM) , TD(TD_NMFN) , TD(TD_MBTN) ,    MO(_MV) , TD(TD_LANG) , XXXXXXX , XXXXXXX  , KC_LBRC/* @` */
+    KC_LALT , KC_LGUI     , TD(TD_NMSM) , KC_SPC , TD(TD_MBTN) ,      MO(_MV) , TD(TD_LANG) , XXXXXXX , XXXXXXX  , KC_LBRC/* @` */
   ),
 
   // マウス
-  [1] = LAYOUT_universal(
+  [_MOUSE] = LAYOUT_universal(
     _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , _______ , _______ , _______ , _______ , _______ ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          KC_BTN4 , KC_BTN1 , KC_BTN2 , KC_BTN5 , _______ , _______ ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , _______ , _______ , _______ , _______ , _______ ,
@@ -175,23 +172,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   // 数字（スクロールモード）
-  [2] = LAYOUT_universal(
+  [_NUM] = LAYOUT_universal(
     _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , KC_7/* ' */ , KC_8/* ( */ , KC_9/* ) */ , _______         , KC_DEL  ,
-    _______ , _______ , KC_SPC  , _______ , _______ , _______ ,          KC_0    , KC_4/* $ */ , KC_5/* % */ , KC_6/* & */ , KC_QUOT/* :* */ , _______ ,
+    _______ , _______ , _______ , _______ , MO(_FN) , _______ ,          KC_0    , KC_4/* $ */ , KC_5/* % */ , KC_6/* & */ , KC_QUOT/* :* */ , _______ ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , KC_1/* ! */ , KC_2/* " */ , KC_3/* # */ , _______         , KC_EJCT ,
     _______ , _______           , _______ , _______ , _______ ,          C(KC_UP) , _______ , XXXXXXX , XXXXXXX , _______
   ),
 
-  // FN（スクロールモード）
-  [3] = LAYOUT_universal(
-    _______ , _______ , _______  , _______ , KBC_RST , _______ ,          KC_F10 , KC_F7 , KC_F8 , KC_F9 , KC_PSCR , _______ ,
-    _______ , AML_TO  , KBC_SAVE , _______ , _______ , _______ ,          KC_F11 , KC_F4 , KC_F5 , KC_F6 , _______ , _______ ,
-    _______ , _______ , _______  , _______ , _______ , _______ ,          KC_F12 , KC_F1 , KC_F2 , KC_F3 , _______ , _______ ,
-    _______ , _______            , _______ , _______ , _______ ,          _______ , _______ , XXXXXXX , XXXXXXX , _______
-  ),
-
   // 記号（スクロールモード）
-  [4] = LAYOUT_universal(
+  [_SYM] = LAYOUT_universal(
     _______ , _______ , _______ , _______ , _______ , _______ ,          S(KC_2)/* " */  , KC_RBRC/* [{ */  , KC_NUHS/* ]} */   , KC_MINS/* -= */ , KC_EQL/* ^~ */  , KC_INT3/* ¥| */ ,
     _______ , _______ , KC_SPC  , _______ , _______ , _______ ,          S(KC_7)/* ' */  , S(KC_8)/* ( */   , S(KC_9)/* ) */    , S(KC_6)/* & */  , KC_SCLN/* ;+ */ , KC_QUOT/* :* */  ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          KC_LBRC/* @` */ , S(KC_RBRC)/* {*/ , S(KC_NUHS)/* } */ , _______         , KC_SLSH/* /? */ , KC_INT1/* \_ */  ,
@@ -199,11 +188,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   // 移動（スクロールモード）
-  [5] = LAYOUT_universal(
+  [_MV] = LAYOUT_universal(
     _______ , _______ , _______ , _______ , _______ , _______ ,          KC_PGUP , KC_HOME , KC_END  , KC_PGDN , _______ , _______ ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          KC_LEFT , KC_DOWN , KC_UP   , KC_RGHT , _______ , _______ ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , _______ , _______ , _______ , _______ , _______ ,
     _______ , _______           , _______ , _______ , _______ ,          _______ , _______ , XXXXXXX , XXXXXXX , _______
+  ),
+
+  // FN（スクロールモード）
+  [_FN] = LAYOUT_universal(
+    _______ , _______ , _______  , _______ , KBC_RST , _______ ,          KC_F10 , KC_F7 , KC_F8 , KC_F9 , KC_PSCR , _______ ,
+    _______ , AML_TO  , KBC_SAVE , _______ , _______ , _______ ,          KC_F11 , KC_F4 , KC_F5 , KC_F6 , _______ , _______ ,
+    _______ , _______ , _______  , _______ , _______ , _______ ,          KC_F12 , KC_F1 , KC_F2 , KC_F3 , _______ , _______ ,
+    _______ , _______            , _______ , _______ , _______ ,          _______ , _______ , XXXXXXX , XXXXXXX , _______
   ),
 
 };
