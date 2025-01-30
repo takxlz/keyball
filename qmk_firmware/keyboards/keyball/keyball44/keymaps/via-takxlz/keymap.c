@@ -158,7 +158,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // デフォルト
   [_BASE] = LAYOUT_universal(
     KC_ESC         , KC_Q , KC_W , KC_E , KC_R , KC_T ,               KC_Y  , KC_U , KC_I    , KC_O   , KC_P            , KC_BSPC                 ,
-    LCTL_T(KC_TAB) , KC_A , KC_S , KC_D , KC_F , KC_G ,               KC_H  , KC_J , KC_K    , KC_L   , KC_MINS/* -= */ , KC_ENT          ,
+    LCTL_T(KC_TAB) , KC_A , KC_S , KC_D , KC_F , KC_G ,               KC_H  , KC_J , KC_K    , KC_L   , KC_MINS/* -= */ , KC_ENT                  ,
     KC_LSFT        , KC_Z , KC_X , KC_C , KC_V , KC_B ,               KC_N  , KC_M , KC_COMM , KC_DOT , KC_SLSH/* /? */ , RSFT_T(KC_INT1)/* \_ */ ,
     KC_LALT , KC_LGUI     , TD(TD_NMSM) , KC_SPC , TD(TD_MBTN) ,      MO(_MV) , TD(TD_LANG) , XXXXXXX , XXXXXXX  , KC_LBRC/* @` */
   ),
@@ -173,23 +173,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   // 数字（スクロールモード）
   [_NUM] = LAYOUT_universal(
-    _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , KC_7/* ' */ , KC_8/* ( */ , KC_9/* ) */ , _______         , KC_DEL  ,
-    _______ , _______ , _______ , _______ , MO(_FN) , _______ ,          KC_0    , KC_4/* $ */ , KC_5/* % */ , KC_6/* & */ , KC_QUOT/* :* */ , _______ ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , KC_1/* ! */ , KC_2/* " */ , KC_3/* # */ , _______         , KC_EJCT ,
-    _______ , _______           , _______ , _______ , _______ ,          C(KC_UP) , _______ , XXXXXXX , XXXXXXX , _______
+    _______ , _______ , _______ , _______  , _______ , _______ ,         _______           , KC_7/* ' */       , KC_8/* ( */       , KC_9/* ) */     , KC_EQL/* ^~ */  , KC_BSPC          ,
+    _______ , _______ , KC_LSFT , MO(_SYM) , MO(_FN) , _______ ,         KC_0              , KC_4/* $ */       , KC_5/* % */       , KC_6/* & */     , KC_SCLN/* ;+ */ , KC_QUOT/* :* */  ,
+    _______ , _______ , _______ , _______  , _______ , KC_SPC  ,         KC_LBRC/* @` */   , KC_1/* ! */       , KC_2/* " */       , KC_3/* # */     , KC_SLSH/* /? */ , KC_EJCT          ,
+    _______ , _______           , _______  , _______ , _______ ,         C(KC_UP) , KC_0   , XXXXXXX , XXXXXXX , _______
   ),
 
   // 記号（スクロールモード）
   [_SYM] = LAYOUT_universal(
-    _______ , _______ , _______ , _______ , _______ , _______ ,          S(KC_2)/* " */  , KC_RBRC/* [{ */  , KC_NUHS/* ]} */   , KC_MINS/* -= */ , KC_EQL/* ^~ */  , KC_INT3/* ¥| */ ,
-    _______ , _______ , KC_SPC  , _______ , _______ , _______ ,          S(KC_7)/* ' */  , S(KC_8)/* ( */   , S(KC_9)/* ) */    , S(KC_6)/* & */  , KC_SCLN/* ;+ */ , KC_QUOT/* :* */  ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,          KC_LBRC/* @` */ , S(KC_RBRC)/* {*/ , S(KC_NUHS)/* } */ , _______         , KC_SLSH/* /? */ , KC_INT1/* \_ */  ,
+    _______ , _______ , _______ , _______ , _______ , _______ ,          S(KC_2)/* " */    , S(KC_8)/* ( */    , S(KC_9)/* ) */    , KC_MINS/* -= */  , KC_EQL/* ^~ */  , KC_BSPC         ,
+    _______ , _______ , KC_LSFT , _______ , _______ , _______ ,          S(KC_7)/* ' */    , KC_RBRC/* [{ */   , KC_NUHS/* ]} */   , S(KC_6)/* & */   , KC_SCLN/* ;+ */ , KC_QUOT/* :* */ ,
+    _______ , _______ , _______ , _______ , _______ , KC_SPC  ,          S(KC_LBRC)/* ` */ , S(KC_RBRC)/* { */ , S(KC_NUHS)/* } */ , KC_INT3/* ¥| */ , KC_SLSH/* /? */ , KC_INT1/* \_ */ ,
     _______ , _______           , _______ , _______ , _______ ,          C(KC_UP) , _______ , XXXXXXX , XXXXXXX , _______
   ),
 
   // 移動（スクロールモード）
   [_MV] = LAYOUT_universal(
-    _______ , _______ , _______ , _______ , _______ , _______ ,          KC_PGUP , KC_HOME , KC_END  , KC_PGDN , _______ , _______ ,
+    _______ , _______ , _______ , _______ , _______ , _______ ,          KC_PGUP , KC_HOME , KC_END  , KC_PGDN , _______ , KC_DEL  ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          KC_LEFT , KC_DOWN , KC_UP   , KC_RGHT , _______ , _______ ,
     _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , _______ , _______ , _______ , _______ , _______ ,
     _______ , _______           , _______ , _______ , _______ ,          _______ , _______ , XXXXXXX , XXXXXXX , _______
@@ -197,7 +197,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   // FN（スクロールモード）
   [_FN] = LAYOUT_universal(
-    _______ , _______ , _______  , _______ , KBC_RST , _______ ,          KC_F10 , KC_F7 , KC_F8 , KC_F9 , KC_PSCR , _______ ,
+    _______ , _______ , _______  , _______ , KBC_RST , _______ ,          KC_F10 , KC_F7 , KC_F8 , KC_F9 , KC_PSCR , KC_DEL  ,
     _______ , AML_TO  , KBC_SAVE , _______ , _______ , _______ ,          KC_F11 , KC_F4 , KC_F5 , KC_F6 , _______ , _______ ,
     _______ , _______ , _______  , _______ , _______ , _______ ,          KC_F12 , KC_F1 , KC_F2 , KC_F3 , _______ , _______ ,
     _______ , _______            , _______ , _______ , _______ ,          _______ , _______ , XXXXXXX , XXXXXXX , _______
