@@ -27,10 +27,10 @@ enum {
 };
 
 // カスタムキーコード
-// enum custom_keycodes {
-//     TK_LNG1 = SAFE_RANGE, // かな
-//     TK_LNG2,              // 英数
-// };
+enum custom_keycodes {
+    TK_FWRD = SAFE_RANGE, // 進む
+    TK_BACK,              // 戻る
+};
 
 // タップダンス
 #ifdef TAP_DANCE_ENABLE
@@ -173,9 +173,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   // 数字（スクロールモード）
   [_NUM] = LAYOUT_universal(
-    _______ , _______ , _______ , _______  , _______ , _______ ,         S(KC_2)/* " */    , KC_7/* ' */       , KC_8/* ( */       , KC_9/* ) */     , KC_EQL/* ^~ */  , KC_BSPC          ,
-    _______ , _______ , KC_LSFT , MO(_SYM) , MO(_FN) , _______ ,         S(KC_7)/* ' */    , KC_4/* $ */       , KC_5/* % */       , KC_6/* & */     , KC_SCLN/* ;+ */ , KC_QUOT/* :* */  ,
-    _______ , _______ , _______ , _______  , _______ , KC_SPC  ,         KC_LBRC/* @` */   , KC_1/* ! */       , KC_2/* " */       , KC_3/* # */     , KC_SLSH/* /? */ , KC_EJCT          ,
+    _______ , _______ , _______ , _______  , _______ , _______ ,         S(KC_2)/* " */    , KC_7/* ' */       , KC_8/* ( */       , KC_9/* ) */      , KC_EQL/* ^~ */  , KC_BSPC          ,
+    _______ , _______ , KC_LSFT , MO(_SYM) , MO(_FN) , _______ ,         S(KC_7)/* ' */    , KC_4/* $ */       , KC_5/* % */       , KC_6/* & */      , KC_SCLN/* ;+ */ , KC_QUOT/* :* */  ,
+    _______ , _______ , _______ , _______  , _______ , KC_SPC  ,         KC_LBRC/* @` */   , KC_1/* ! */       , KC_2/* " */       , KC_3/* # */      , KC_SLSH/* /? */ , KC_INT1/* \_ */  ,
     _______ , _______           , _______  , _______ , _______ ,         C(KC_UP) , KC_0   , XXXXXXX , XXXXXXX , _______
   ),
 
@@ -190,8 +190,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // 移動（スクロールモード）
   [_MV] = LAYOUT_universal(
     _______ , _______ , _______ , _______ , _______ , _______ ,          KC_PGUP , KC_HOME , KC_END  , KC_PGDN , _______ , KC_DEL  ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,          KC_LEFT , KC_DOWN , KC_UP   , KC_RGHT , _______ , _______ ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , _______ , _______ , _______ , _______ , _______ ,
+    _______ , _______ , _______ , TK_BACK , TK_FWRD , _______ ,          KC_LEFT , KC_DOWN , KC_UP   , KC_RGHT , _______ , _______ ,
+    _______ , _______ , _______ , _______ , _______ , _______ ,          _______ , _______ , _______ , _______ , _______ , KC_EJCT ,
     _______ , _______           , _______ , _______ , _______ ,          _______ , _______ , XXXXXXX , XXXXXXX , _______
   ),
 
@@ -209,6 +209,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /************************************************************ カスタムキー ************************************************************/
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (keycode == TK_FWRD && record -> event.pressed) {
+    if (detected_host_os() == OS_WINDOWS) {
+      register_code(KC_LALT);
+      tap_code(KC_RGHT);
+      unregister_code(KC_LALT);
+    } else {
+      register_code(KC_LGUI);
+      tap_code(KC_RGHT);
+      unregister_code(KC_LGUI);
+    }
+    return false;
+  }
+  if (keycode == TK_BACK && record -> event.pressed) {
+    if (detected_host_os() == OS_WINDOWS) {
+      register_code(KC_LALT);
+      tap_code(KC_LEFT);
+      unregister_code(KC_LALT);
+    } else {
+      register_code(KC_LGUI);
+      tap_code(KC_LEFT);
+      unregister_code(KC_LGUI);
+    }
+    return false;
+  }
   return true;
 };
 
