@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAP_CODE_DELAY 10
 #define USB_POLLING_INTERVAL_MS 5
 
-#define TAPPING_TERM 180
+#define TAPPING_TERM 190
 
 // ホールド期間に入る前でも他のキーが重ねられた時点でホールドとする
 #define PERMISSIVE_HOLD
