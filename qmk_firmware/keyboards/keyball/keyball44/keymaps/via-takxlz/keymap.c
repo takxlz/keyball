@@ -30,6 +30,7 @@ enum {
 enum custom_keycodes {
     TK_FWRD = SAFE_RANGE, // 進む
     TK_BACK,              // 戻る
+    TK_MCTL,              // ミッションコントロール
 };
 
 // タップダンス
@@ -158,8 +159,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // デフォルト
   [_BASE] = LAYOUT_universal(
     KC_ESC         , KC_Q , KC_W , KC_E , KC_R , KC_T ,               KC_Y  , KC_U , KC_I    , KC_O   , KC_P            , KC_BSPC                 ,
-    LCTL_T(KC_TAB) , KC_A , KC_S , KC_D , KC_F , KC_G ,               KC_H  , KC_J , KC_K    , KC_L   , KC_MINS/* -= */ , KC_ENT                  ,
-    KC_LSFT        , KC_Z , KC_X , KC_C , KC_V , KC_B ,               KC_N  , KC_M , KC_COMM , KC_DOT , KC_SLSH/* /? */ , RSFT_T(KC_INT1)/* \_ */ ,
+    KC_LCTL        , KC_A , KC_S , KC_D , KC_F , KC_G ,               KC_H  , KC_J , KC_K    , KC_L   , KC_MINS/* -= */ , KC_ENT                  ,
+    LSFT_T(KC_TAB) , KC_Z , KC_X , KC_C , KC_V , KC_B ,               KC_N  , KC_M , KC_COMM , KC_DOT , KC_SLSH/* /? */ , RSFT_T(KC_INT1)/* \_ */ ,
     KC_LALT , KC_LGUI     , TD(TD_NMSM) , KC_SPC , TD(TD_MBTN) ,      MO(_MV) , TD(TD_LANG) , XXXXXXX , XXXXXXX  , LT(_MV, KC_BTN1)
   ),
 
@@ -176,7 +177,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______ , _______ , _______ , _______  , _______ , _______ ,         S(KC_2)/* " */    , KC_7/* ' */       , KC_8/* ( */       , KC_9/* ) */      , KC_EQL/* ^~ */  , KC_BSPC          ,
     _______ , _______ , KC_LSFT , MO(_SYM) , MO(_FN) , _______ ,         S(KC_7)/* ' */    , KC_4/* $ */       , KC_5/* % */       , KC_6/* & */      , KC_SCLN/* ;+ */ , KC_QUOT/* :* */  ,
     _______ , _______ , _______ , _______  , _______ , KC_SPC  ,         KC_LBRC/* @` */   , KC_1/* ! */       , KC_2/* " */       , KC_3/* # */      , KC_SLSH/* /? */ , KC_INT1/* \_ */  ,
-    _______ , _______           , _______  , _______ , _______ ,         C(KC_UP) , KC_0   , XXXXXXX , XXXXXXX , _______
+    _______ , _______           , _______  , _______ , _______ ,         TK_MCTL , KC_0   , XXXXXXX , XXXXXXX , _______
   ),
 
   // 記号（スクロールモード）
@@ -184,7 +185,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______ , _______ , _______ , _______ , _______ , _______ ,          S(KC_2)/* " */    , S(KC_8)/* ( */    , S(KC_9)/* ) */    , KC_MINS/* -= */  , KC_EQL/* ^~ */  , KC_BSPC         ,
     _______ , _______ , KC_LSFT , _______ , _______ , _______ ,          S(KC_7)/* ' */    , KC_RBRC/* [{ */   , KC_NUHS/* ]} */   , S(KC_6)/* & */   , KC_SCLN/* ;+ */ , KC_QUOT/* :* */ ,
     _______ , _______ , _______ , _______ , _______ , KC_SPC  ,          S(KC_LBRC)/* ` */ , S(KC_RBRC)/* { */ , S(KC_NUHS)/* } */ , KC_INT3/* ¥| */ , KC_SLSH/* /? */ , KC_INT1/* \_ */ ,
-    _______ , _______           , _______ , _______ , _______ ,          C(KC_UP) , _______ , XXXXXXX , XXXXXXX , _______
+    _______ , _______           , _______ , _______ , _______ ,          TK_MCTL , _______ , XXXXXXX , XXXXXXX , _______
   ),
 
   // 移動（スクロールモード）
@@ -209,6 +210,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /************************************************************ カスタムキー ************************************************************/
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  // 進む
   if (keycode == TK_FWRD && record -> event.pressed) {
     if (detected_host_os() == OS_WINDOWS) {
       register_code(KC_LALT);
@@ -221,6 +223,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return false;
   }
+  // 戻る
   if (keycode == TK_BACK && record -> event.pressed) {
     if (detected_host_os() == OS_WINDOWS) {
       register_code(KC_LALT);
@@ -230,6 +233,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       register_code(KC_LGUI);
       tap_code(KC_LEFT);
       unregister_code(KC_LGUI);
+    }
+    return false;
+  }
+  // ミッションコントロール
+  if (keycode == TK_MCTL && record -> event.pressed) {
+    if (detected_host_os() == OS_WINDOWS) {
+      register_code(KC_LGUI);
+      tap_code(KC_TAB);
+      unregister_code(KC_LGUI);
+    } else {
+      register_code(KC_LCTL);
+      tap_code(KC_UP);
+      unregister_code(KC_LCTL);
     }
     return false;
   }
