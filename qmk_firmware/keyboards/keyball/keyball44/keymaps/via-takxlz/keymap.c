@@ -186,56 +186,148 @@ tap_dance_action_t tap_dance_actions[] = {
 
 /************************************************************ キー割り当て ************************************************************/
 // clang-format off
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  // デフォルト
-  [_BASE] = LAYOUT_universal(
-    KC_ESC         , KC_Q , KC_W , KC_E , KC_R , KC_T ,                 KC_Y , KC_U , KC_I    , KC_O   , KC_P            , KC_BSPC                 ,
-    KC_LCTL        , KC_A , KC_S , KC_D , KC_F , KC_G ,                 KC_H , KC_J , KC_K    , KC_L   , KC_MINS/* -= */ , KC_ENT                  ,
-    LSFT_T(KC_TAB) , KC_Z , KC_X , KC_C , KC_V , KC_B ,                 KC_N , KC_M , KC_COMM , KC_DOT , KC_SLSH/* /? */ , RSFT_T(KC_INT1)/* \_ */ ,
-    KC_LALT , KC_LGUI , /***/ TD(TD_ENNS) , KC_SPC , TD(TD_MBTN) ,      MO(_MV) , TD(TD_JPNS) , XXXXXXX , XXXXXXX  , LT(_MV, KC_BTN1)
-  ),
-
-  // マウス
-  [_MOUSE] = LAYOUT_universal(
-    _______ , _______ , _______ , _______ , _______ , _______ ,           _______ , _______ , _______ , _______ , _______ , _______ ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,           KC_BTN4 , KC_BTN1 , KC_BTN2 , KC_BTN5 , _______ , _______ ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,           _______ , _______ , _______ , _______ , _______ , _______ ,
-    _______ , _______ , /***/ _______ , _______ , _______ ,               _______ , _______ , XXXXXXX , XXXXXXX , _______
-  ),
-
-  // 数字・記号（スクロールモード）
-  [_NS] = LAYOUT_universal(
-    _______ , _______ , S(KC_8)/* ( */    , S(KC_9)/* ) */    , S(KC_2)/* " */  , _______ ,         S(KC_SCLN)/* + */  , KC_7/* ' */ , KC_8/* ( */ , KC_9/* ) */     , KC_EQL/* ^~ */ , KC_BSPC          ,
-    _______ , _______ , KC_RBRC/* [{ */   , KC_NUHS/* ]} */   , S(KC_7)/* ' */  , _______ ,         S(KC_QUOT)/* * */  , KC_4/* $ */ , KC_5/* % */ , KC_6/* & */     , KC_MINS/* -= */ , TK_COLN/* ;: */ ,
-    _______ , _______ , S(KC_RBRC)/* { */ , S(KC_NUHS)/* } */ , KC_LBRC/* @` */ , _______ ,         KC_0 , KC_1/* ! */ , KC_2/* " */ , KC_3/* # */ , KC_SLSH/* /? */ , KC_INT1/* \_ */ ,
-    _______ , _______ , /***/ MO(_FN) , _______ , _______ ,                                                _______ , MO(_FN) , XXXXXXX , XXXXXXX , KC_INT3/* ¥| */
-  ),
-
-  // 数字・記号（サブ）（スクロールモード）
-  [_NSS] = LAYOUT_universal(
-    _______ , _______ , _______ , _______ , _______ , _______ ,        _______ , _______ , _______ , _______          , _______         , _______         ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,        _______ , _______ , _______ , _______          , _______ , _______ ,
-    _______ , _______ , _______ , _______ , _______ , _______  ,        _______ , _______ , _______ , _______ , _______         , _______         ,
-    _______ , _______ , /***/ _______ , _______ , _______ ,            _______ , _______ , XXXXXXX , XXXXXXX , _______
-  ),
-
-  // 移動（スクロールモード）
-  [_MV] = LAYOUT_universal(
-    _______ , _______ , _______ , _______ , _______ , _______ ,           KC_PGUP , KC_HOME , KC_END  , KC_PGDN , _______ , KC_DEL  ,
-    _______ , _______ , _______ , TK_BACK , TK_FWRD , _______ ,           KC_LEFT , KC_DOWN , KC_UP   , KC_RGHT , _______ , _______ ,
-    _______ , _______ , _______ , _______ , _______ , _______ ,           _______ , _______ , _______ , _______ , _______ , KC_EJCT ,
-    _______ , _______ , /***/ _______ , _______ , _______ ,               _______ , _______ , XXXXXXX , XXXXXXX , _______
-  ),
-
-  // FN（スクロールモード）
-  [_FN] = LAYOUT_universal(
-    _______ , _______ , _______  , _______ , KBC_RST , _______ ,       KC_F10 , KC_F7 , KC_F8 , KC_F9 , KC_PSCR , KC_DEL  ,
-    _______ , AML_TO  , KBC_SAVE , _______ , TK_MCTL , _______ ,       KC_F11 , KC_F4 , KC_F5 , KC_F6 , _______ , _______ ,
-    _______ , _______ , _______  , _______ , _______ , _______ ,       KC_F12 , KC_F1 , KC_F2 , KC_F3 , _______ , _______ ,
-    _______ , _______ , /***/  _______ , _______ , _______ ,           _______ , _______ , XXXXXXX , XXXXXXX , _______
-  ),
-
+// ベースレイヤー
+const uint16_t PROGMEM lh_base[] = {
+  KC_ESC,          KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
+  KC_LCTL,         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
+  LSFT_T(KC_TAB),  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,
+                   KC_LALT, KC_LGUI, TD(TD_ENNS), KC_SPC, TD(TD_MBTN)
 };
+const uint16_t PROGMEM rh_base[] = {
+  KC_Y,    KC_U,    KC_I,     KC_O,     KC_P,              KC_BSPC,
+  KC_H,    KC_J,    KC_K,     KC_L,     KC_MINS /* -= */,  KC_ENT,
+  KC_N,    KC_M,    KC_COMM,  KC_DOT,   KC_SLSH /* /? */,  RSFT_T(KC_INT1) /* \_ */,
+  MO(_MV), TD(TD_JPNS), XXXXXXX, XXXXXXX, LT(_MV, KC_BTN1)
+};
+// マウスレイヤー
+const uint16_t PROGMEM lh_mouse[] = {
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+           _______, _______, _______, _______, _______
+};
+const uint16_t PROGMEM rh_mouse[] = {
+  _______, _______, _______, _______, _______, _______,
+  KC_BTN4, KC_BTN1, KC_BTN2, KC_BTN5, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, XXXXXXX, XXXXXXX, _______
+};
+// 数字・記号レイヤー
+const uint16_t PROGMEM lh_ns[] = {
+  _______, _______, S(KC_8) /* ( */,  S(KC_9) /* ) */,  S(KC_2) /* " */, _______,
+  _______, _______, KC_RBRC /* [{ */, KC_NUHS /* ]} */, S(KC_7) /* ' */, _______,
+  _______, _______, S(KC_RBRC) /* { */, S(KC_NUHS) /* } */, KC_LBRC /* @` */, _______,
+           _______, _______, MO(_FN), _______, _______
+};
+const uint16_t PROGMEM rh_ns[] = {
+  S(KC_SCLN) /* + */, KC_7 /* ' */, KC_8 /* ( */, KC_9 /* ) */, KC_EQL /* ^~ */, KC_BSPC,
+  S(KC_QUOT) /* * */, KC_4 /* $ */, KC_5 /* % */, KC_6 /* & */, KC_MINS /* -= */, TK_COLN /* ;: */,
+  KC_0, KC_1 /* ! */, KC_2 /* " */, KC_3 /* # */, KC_SLSH /* /? */, KC_INT1 /* \_ */,
+  _______, MO(_FN), XXXXXXX, XXXXXXX, KC_INT3 /* ¥| */
+};
+// 数字・記号（サブ）レイヤー
+const uint16_t PROGMEM lh_nss[] = {
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+           _______, _______, _______, _______, _______
+};
+const uint16_t PROGMEM rh_nss[] = {
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, XXXXXXX, XXXXXXX, _______
+};
+// 移動レイヤー
+const uint16_t PROGMEM lh_mv[] = {
+  _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, TK_BACK, TK_FWRD, _______,
+  _______, _______, _______, _______, _______, _______,
+           _______, _______, _______, _______, _______
+};
+const uint16_t PROGMEM rh_mv[] = {
+  KC_PGUP, KC_HOME, KC_END,  KC_PGDN, _______, KC_DEL,
+  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,
+  _______, _______, _______, _______, _______, KC_EJCT,
+  _______, _______, XXXXXXX, XXXXXXX, _______
+};
+// FNレイヤー
+const uint16_t PROGMEM lh_fn[] = {
+  _______, _______, _______, _______, KBC_RST, _______,
+  _______, AML_TO,  KBC_SAVE, _______, TK_MCTL, _______,
+  _______, _______, _______, _______, _______, _______,
+           _______, _______, _______, _______, _______
+};
+const uint16_t PROGMEM rh_fn[] = {
+  KC_F12, KC_F7, KC_F8, KC_F9, KC_PSCR, KC_DEL,
+  KC_F11, KC_F4, KC_F5, KC_F6, _______, _______,
+  KC_F10, KC_F1, KC_F2, KC_F3, _______, _______,
+  _______, _______, XXXXXXX, XXXXXXX, _______
+};
+// キーマップ本体
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+[_BASE] = LAYOUT_universal(
+  lh_base[0], lh_base[1], lh_base[2], lh_base[3], lh_base[4], lh_base[5],
+  rh_base[0], rh_base[1], rh_base[2], rh_base[3], rh_base[4], rh_base[5],
+  lh_base[6], lh_base[7], lh_base[8], lh_base[9], lh_base[10], lh_base[11],
+  rh_base[6], rh_base[7], rh_base[8], rh_base[9], rh_base[10], rh_base[11],
+  lh_base[12], lh_base[13], lh_base[14], lh_base[15], lh_base[16], lh_base[17],
+  rh_base[12], rh_base[13], rh_base[14], rh_base[15], rh_base[16], rh_base[17],
+  lh_base[18], lh_base[19], lh_base[20], lh_base[21], lh_base[22],
+  rh_base[18], rh_base[19], rh_base[20], rh_base[21], rh_base[22]
+),
+[_MOUSE] = LAYOUT_universal(
+  lh_mouse[0], lh_mouse[1], lh_mouse[2], lh_mouse[3], lh_mouse[4], lh_mouse[5],
+  rh_mouse[0], rh_mouse[1], rh_mouse[2], rh_mouse[3], rh_mouse[4], rh_mouse[5],
+  lh_mouse[6], lh_mouse[7], lh_mouse[8], lh_mouse[9], lh_mouse[10], lh_mouse[11],
+  rh_mouse[6], rh_mouse[7], rh_mouse[8], rh_mouse[9], rh_mouse[10], rh_mouse[11],
+  lh_mouse[12], lh_mouse[13], lh_mouse[14], lh_mouse[15], lh_mouse[16], lh_mouse[17],
+  rh_mouse[12], rh_mouse[13], rh_mouse[14], rh_mouse[15], rh_mouse[16], rh_mouse[17],
+  lh_mouse[18], lh_mouse[19], lh_mouse[20], lh_mouse[21], lh_mouse[22],
+  rh_mouse[18], rh_mouse[19], rh_mouse[20], rh_mouse[21], rh_mouse[22]
+),
+[_NS] = LAYOUT_universal(
+  lh_ns[0], lh_ns[1], lh_ns[2], lh_ns[3], lh_ns[4], lh_ns[5],
+  rh_ns[0], rh_ns[1], rh_ns[2], rh_ns[3], rh_ns[4], rh_ns[5],
+  lh_ns[6], lh_ns[7], lh_ns[8], lh_ns[9], lh_ns[10], lh_ns[11],
+  rh_ns[6], rh_ns[7], rh_ns[8], rh_ns[9], rh_ns[10], rh_ns[11],
+  lh_ns[12], lh_ns[13], lh_ns[14], lh_ns[15], lh_ns[16], lh_ns[17],
+  rh_ns[12], rh_ns[13], rh_ns[14], rh_ns[15], rh_ns[16], rh_ns[17],
+  lh_ns[18], lh_ns[19], lh_ns[20], lh_ns[21], lh_ns[22],
+  rh_ns[18], rh_ns[19], rh_ns[20], rh_ns[21], rh_ns[22]
+),
+[_NSS] = LAYOUT_universal(
+  lh_nss[0], lh_nss[1], lh_nss[2], lh_nss[3], lh_nss[4], lh_nss[5],
+  rh_nss[0], rh_nss[1], rh_nss[2], rh_nss[3], rh_nss[4], rh_nss[5],
+  lh_nss[6], lh_nss[7], lh_nss[8], lh_nss[9], lh_nss[10], lh_nss[11],
+  rh_nss[6], rh_nss[7], rh_nss[8], rh_nss[9], rh_nss[10], rh_nss[11],
+  lh_nss[12], lh_nss[13], lh_nss[14], lh_nss[15], lh_nss[16], lh_nss[17],
+  rh_nss[12], rh_nss[13], rh_nss[14], rh_nss[15], rh_nss[16], rh_nss[17],
+  lh_nss[18], lh_nss[19], lh_nss[20], lh_nss[21], lh_nss[22],
+  rh_nss[18], rh_nss[19], rh_nss[20], rh_nss[21], rh_nss[22]
+),
+[_MV] = LAYOUT_universal(
+  lh_mv[0], lh_mv[1], lh_mv[2], lh_mv[3], lh_mv[4], lh_mv[5],
+  rh_mv[0], rh_mv[1], rh_mv[2], rh_mv[3], rh_mv[4], rh_mv[5],
+  lh_mv[6], lh_mv[7], lh_mv[8], lh_mv[9], lh_mv[10], lh_mv[11],
+  rh_mv[6], rh_mv[7], rh_mv[8], rh_mv[9], rh_mv[10], rh_mv[11],
+  lh_mv[12], lh_mv[13], lh_mv[14], lh_mv[15], lh_mv[16], lh_mv[17],
+  rh_mv[12], rh_mv[13], rh_mv[14], rh_mv[15], rh_mv[16], rh_mv[17],
+  lh_mv[18], lh_mv[19], lh_mv[20], lh_mv[21], lh_mv[22],
+  rh_mv[18], rh_mv[19], rh_mv[20], rh_mv[21], rh_mv[22]
+),
+[_FN] = LAYOUT_universal(
+  lh_fn[0], lh_fn[1], lh_fn[2], lh_fn[3], lh_fn[4], lh_fn[5],
+  rh_fn[0], rh_fn[1], rh_fn[2], rh_fn[3], rh_fn[4], rh_fn[5],
+  lh_fn[6], lh_fn[7], lh_fn[8], lh_fn[9], lh_fn[10], lh_fn[11],
+  rh_fn[6], rh_fn[7], rh_fn[8], rh_fn[9], rh_fn[10], rh_fn[11],
+  lh_fn[12], lh_fn[13], lh_fn[14], lh_fn[15], lh_fn[16], lh_fn[17],
+  rh_fn[12], rh_fn[13], rh_fn[14], rh_fn[15], rh_fn[16], rh_fn[17],
+  lh_fn[18], lh_fn[19], lh_fn[20], lh_fn[21], lh_fn[22],
+  rh_fn[18], rh_fn[19], rh_fn[20], rh_fn[21], rh_fn[22]
+)
+};
+
 // clang-format on
 
 
