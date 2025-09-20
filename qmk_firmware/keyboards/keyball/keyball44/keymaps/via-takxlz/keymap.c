@@ -20,10 +20,9 @@ void oledkit_render_info_user(void) {
 enum {
   _BASE = 0, // ベース（QWERTY）
   _MOUSE,    // マウス
-  _NS,       // 数字・記号
-  _NSS,      // 数字・記号（サブ）
-  _MV,       // 移動
-  _FN,       // ファンクション
+  _SYM,      // 記号
+  _NUM,      // 数字
+  _ADJUST,       // 設定
 };
 
 // カスタムキーコード
@@ -33,6 +32,7 @@ enum custom_keycodes {
     TK_MCTL,              // ミッションコントロール
     TK_COLN,              // コロン、セミコロン
     TK_PLAS,              // プラス、アスタリスク
+    TK_SLEP,              // スリープ
 };
 
 // タップダンス
@@ -43,6 +43,7 @@ enum {
   TD_ENNS,     // 英数、数字・記号
   TD_JPNS,     // かな、数字・記号
   TD_MBTN,     // マウス
+  TD_TBES    // タブ、エスケープ
 };
 
 // TD種別
@@ -75,6 +76,7 @@ int cur_dance(tap_dance_state_t *state) {
 }
 
 // [TD_LANG]
+/*
 void td_lang_finished(tap_dance_state_t *state, void *user_data) {
   td_state = cur_dance(state);
   // 英数
@@ -98,14 +100,15 @@ void td_lang_finished(tap_dance_state_t *state, void *user_data) {
 void td_lang_reset(tap_dance_state_t *state, void *user_data) {
   td_state = 0;
 }
+*/
 
 // [TD_ENNS]
 void td_enns_finished(tap_dance_state_t *state, void *user_data) {
   td_state = cur_dance(state);
  if (td_state == SINGLE_HOLD) {
-    layer_on(_NS);
+    layer_on(_SYM);
   } else if (td_state == SINGLE_TAP_HOLD) {
-    layer_on(_NSS);
+    layer_on(_SYM);
   } else {
     if (detected_host_os() == OS_WINDOWS) {
       tap_code(KC_LNG2);
@@ -117,9 +120,9 @@ void td_enns_finished(tap_dance_state_t *state, void *user_data) {
 }
 void td_enns_reset(tap_dance_state_t *state, void *user_data) {
   if (td_state == SINGLE_HOLD) {
-    layer_off(_NS);
+    layer_off(_SYM);
   } else if (td_state == SINGLE_TAP_HOLD) {
-    layer_off(_NSS);
+    layer_off(_SYM);
   }
   td_state = 0;
 }
@@ -128,9 +131,9 @@ void td_enns_reset(tap_dance_state_t *state, void *user_data) {
 void td_jpns_finished(tap_dance_state_t *state, void *user_data) {
   td_state = cur_dance(state);
   if (td_state == SINGLE_HOLD) {
-    layer_on(_NS);
+    layer_on(_NUM);
   } else if (td_state == SINGLE_TAP_HOLD) {
-    layer_on(_NSS);
+    layer_on(_NUM);
   } else {
     if (detected_host_os() == OS_WINDOWS) {
       tap_code(KC_LNG1);
@@ -142,9 +145,9 @@ void td_jpns_finished(tap_dance_state_t *state, void *user_data) {
 }
 void td_jpns_reset(tap_dance_state_t *state, void *user_data) {
   if (td_state == SINGLE_HOLD) {
-    layer_off(_NS);
+    layer_off(_NUM);
   } else if (td_state == SINGLE_TAP_HOLD) {
-    layer_off(_NSS);
+    layer_off(_NUM);
   }
   td_state = 0;
 }
@@ -175,12 +178,26 @@ void td_mbtn_reset(tap_dance_state_t *state, void *user_data) {
   td_state = 0;
 }
 
+// [TD_TBES]
+void td_tbes_finished(tap_dance_state_t *state, void *user_data) {
+  td_state = cur_dance(state);
+  if (td_state == SINGLE_TAP || td_state == DOUBLE_TAP) {
+    tap_code(KC_TAB);
+  } else {
+    tap_code(KC_ESC);
+  }
+}
+void td_tbes_reset(tap_dance_state_t *state, void *user_data) {
+  td_state = 0;
+}
+
 // TD割り当て
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_LANG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_lang_finished, td_lang_reset),
+    // [TD_LANG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_lang_finished, td_lang_reset),
     [TD_ENNS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_enns_finished, td_enns_reset),
     [TD_JPNS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_jpns_finished, td_jpns_reset),
     [TD_MBTN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mbtn_finished, td_mbtn_reset),
+    [TD_TBES] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_tbes_finished, td_tbes_reset),
 };
 #endif
 
@@ -189,16 +206,16 @@ tap_dance_action_t tap_dance_actions[] = {
 // clang-format off
 // ベースレイヤー
 const uint16_t PROGMEM lh_base[] = {
-  KC_ESC,          KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
-  LSFT_T(KC_TAB),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
-  KC_LCTL,         KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,
-                   KC_LALT, KC_LGUI, TD(TD_ENNS), KC_SPC, TD(TD_MBTN)
+  TD(TD_TBES), KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
+  KC_LCTL,     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
+  KC_LSFT,     KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,
+               KC_LGUI, KC_LALT, TD(TD_ENNS), KC_SPC, TD(TD_MBTN)
 };
 const uint16_t PROGMEM rh_base[] = {
   KC_Y,    KC_U,    KC_I,     KC_O,     KC_P,              KC_BSPC,
-  KC_H,    KC_J,    KC_K,     KC_L,     KC_MINS /* -= */,  RSFT_T(KC_ENT),
-  KC_N,    KC_M,    KC_COMM,  KC_DOT,   KC_SLSH /* /? */,  KC_INT1 /* \_ */,
-           MO(_MV), TD(TD_JPNS), XXXXXXX, XXXXXXX, LT(_MV, KC_BTN1)
+  KC_H,    KC_J,    KC_K,     KC_L,     KC_SCLN /* ;: */,  KC_QUOT /* '" */,
+  KC_N,    KC_M,    KC_COMM,  KC_DOT,   KC_SLSH /* /? */,  KC_MINS /* -_ */,
+           KC_ENT,  TD(TD_JPNS), XXXXXXX, XXXXXXX, KC_ESC
 };
 
 // マウスレイヤー
@@ -215,60 +232,46 @@ const uint16_t PROGMEM rh_mouse[] = {
            _______, _______, XXXXXXX, XXXXXXX, _______
 };
 
-// 数字・記号レイヤー
-const uint16_t PROGMEM lh_ns[] = {
-  _______, _______, S(KC_RBRC) /* { */,   S(KC_NUHS) /* } */,   _______,           _______,
-  _______, _______, KC_RBRC /* [{ */,     KC_NUHS /* ]} */,     KC_LBRC /* @` */,  _______,
-  _______, _______, _______,              _______,              _______,           _______,
-           _______, _______, MO(_FN), _______, _______
-};
-const uint16_t PROGMEM rh_ns[] = {
-  _______,            KC_7 /* ' */, KC_8 /* ( */, KC_9 /* ) */, KC_EQL /* ^~ */,  KC_BSPC,
-  KC_0,               KC_4 /* $ */, KC_5 /* % */, KC_6 /* & */, KC_MINS /* -= */, TK_COLN /* ;: */,
-  TK_PLAS /* +* */,   KC_1 /* ! */, KC_2 /* " */, KC_3 /* # */, KC_SLSH /* /? */, KC_INT1 /* \_ */,
-                      _______, MO(_FN), XXXXXXX, XXXXXXX, KC_INT3 /* ¥| */
-};
-
-// 数字・記号（サブ）レイヤー
-const uint16_t PROGMEM lh_nss[] = {
+// 記号レイヤー
+const uint16_t PROGMEM lh_sym[] = {
+  _______, S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),
   _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______,
-           _______, _______, MO(_FN), _______, _______
-};
-const uint16_t PROGMEM rh_nss[] = {
-  _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______,
-           _______, MO(_FN), XXXXXXX, XXXXXXX, _______
-};
-
-// 移動レイヤー
-const uint16_t PROGMEM lh_mv[] = {
-  _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, TK_BACK, TK_FWRD, _______,
   _______, _______, _______, _______, _______, _______,
            _______, _______, _______, _______, _______
 };
-const uint16_t PROGMEM rh_mv[] = {
-  KC_PGUP, KC_HOME, KC_END,  KC_PGDN, _______, KC_DEL,
+const uint16_t PROGMEM rh_sym[] = {
+  S(KC_6),   S(KC_7),    S(KC_8),   S(KC_9),    S(KC_0),    KC_DEL,
+  KC_GRV,    KC_MINS,    KC_EQL,    KC_LBRC,    KC_RBRC,    KC_BSLS,
+  S(KC_GRV), S(KC_MINS), S(KC_EQL), S(KC_LBRC), S(KC_RBRC), S(KC_BSLS),
+           _______, MO(_ADJUST), XXXXXXX, XXXXXXX, _______
+};
+
+// 数字レイヤー
+const uint16_t PROGMEM lh_num[] = {
+  _______, KC_1,  KC_2,  KC_3,  KC_4,  KC_5,
+  _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5,
+  _______, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10,
+           _______, _______, MO(_ADJUST), _______, _______
+};
+const uint16_t PROGMEM rh_num[] = {
+  KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL,
   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,
-  _______, _______, _______, _______, _______, KC_EJCT,
+  KC_HOME, KC_PGDN, KC_PGUP, KC_END,  KC_F11,  KC_F12,
            _______, _______, XXXXXXX, XXXXXXX, _______
 };
 
-// FNレイヤー
-const uint16_t PROGMEM lh_fn[] = {
-  _______, _______, _______, _______, KBC_RST, _______,
-  _______, AML_TO,  KBC_SAVE, _______, TK_MCTL, _______,
+// 設定レイヤー
+const uint16_t PROGMEM lh_adjust[] = {
+  _______, TK_SLEP, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
   _______, _______, _______, _______, _______, _______,
            _______, _______, _______, _______, _______
 };
-const uint16_t PROGMEM rh_fn[] = {
-  KC_F12, KC_F7, KC_F8, KC_F9, KC_PSCR, KC_DEL,
-  KC_F11, KC_F4, KC_F5, KC_F6, _______, _______,
-  KC_F10, KC_F1, KC_F2, KC_F3, _______, _______,
-          _______, _______, XXXXXXX, XXXXXXX, _______
+const uint16_t PROGMEM rh_adjust[] = {
+  _______, _______, _______, _______, _______, KC_DEL,
+  KC_LALT, KC_LGUI, KC_PSCR, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______,
+           _______, _______, XXXXXXX, XXXXXXX, _______
 };
 
 // キーマップ本体
@@ -293,45 +296,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     lh_mouse[18], lh_mouse[19], lh_mouse[20], lh_mouse[21], lh_mouse[22],
     rh_mouse[18], rh_mouse[19], rh_mouse[20], rh_mouse[21], rh_mouse[22]
   ),
-  [_NS] = LAYOUT_universal(
-    lh_ns[0], lh_ns[1], lh_ns[2], lh_ns[3], lh_ns[4], lh_ns[5],
-    rh_ns[0], rh_ns[1], rh_ns[2], rh_ns[3], rh_ns[4], rh_ns[5],
-    lh_ns[6], lh_ns[7], lh_ns[8], lh_ns[9], lh_ns[10], lh_ns[11],
-    rh_ns[6], rh_ns[7], rh_ns[8], rh_ns[9], rh_ns[10], rh_ns[11],
-    lh_ns[12], lh_ns[13], lh_ns[14], lh_ns[15], lh_ns[16], lh_ns[17],
-    rh_ns[12], rh_ns[13], rh_ns[14], rh_ns[15], rh_ns[16], rh_ns[17],
-    lh_ns[18], lh_ns[19], lh_ns[20], lh_ns[21], lh_ns[22],
-    rh_ns[18], rh_ns[19], rh_ns[20], rh_ns[21], rh_ns[22]
+  [_SYM] = LAYOUT_universal(
+    lh_sym[0], lh_sym[1], lh_sym[2], lh_sym[3], lh_sym[4], lh_sym[5],
+    rh_sym[0], rh_sym[1], rh_sym[2], rh_sym[3], rh_sym[4], rh_sym[5],
+    lh_sym[6], lh_sym[7], lh_sym[8], lh_sym[9], lh_sym[10], lh_sym[11],
+    rh_sym[6], rh_sym[7], rh_sym[8], rh_sym[9], rh_sym[10], rh_sym[11],
+    lh_sym[12], lh_sym[13], lh_sym[14], lh_sym[15], lh_sym[16], lh_sym[17],
+    rh_sym[12], rh_sym[13], rh_sym[14], rh_sym[15], rh_sym[16], rh_sym[17],
+    lh_sym[18], lh_sym[19], lh_sym[20], lh_sym[21], lh_sym[22],
+    rh_sym[18], rh_sym[19], rh_sym[20], rh_sym[21], rh_sym[22]
   ),
-  [_NSS] = LAYOUT_universal(
-    lh_nss[0], lh_nss[1], lh_nss[2], lh_nss[3], lh_nss[4], lh_nss[5],
-    rh_nss[0], rh_nss[1], rh_nss[2], rh_nss[3], rh_nss[4], rh_nss[5],
-    lh_nss[6], lh_nss[7], lh_nss[8], lh_nss[9], lh_nss[10], lh_nss[11],
-    rh_nss[6], rh_nss[7], rh_nss[8], rh_nss[9], rh_nss[10], rh_nss[11],
-    lh_nss[12], lh_nss[13], lh_nss[14], lh_nss[15], lh_nss[16], lh_nss[17],
-    rh_nss[12], rh_nss[13], rh_nss[14], rh_nss[15], rh_nss[16], rh_nss[17],
-    lh_nss[18], lh_nss[19], lh_nss[20], lh_nss[21], lh_nss[22],
-    rh_nss[18], rh_nss[19], rh_nss[20], rh_nss[21], rh_nss[22]
+  [_NUM] = LAYOUT_universal(
+    lh_num[0], lh_num[1], lh_num[2], lh_num[3], lh_num[4], lh_num[5],
+    rh_num[0], rh_num[1], rh_num[2], rh_num[3], rh_num[4], rh_num[5],
+    lh_num[6], lh_num[7], lh_num[8], lh_num[9], lh_num[10], lh_num[11],
+    rh_num[6], rh_num[7], rh_num[8], rh_num[9], rh_num[10], rh_num[11],
+    lh_num[12], lh_num[13], lh_num[14], lh_num[15], lh_num[16], lh_num[17],
+    rh_num[12], rh_num[13], rh_num[14], rh_num[15], rh_num[16], rh_num[17],
+    lh_num[18], lh_num[19], lh_num[20], lh_num[21], lh_num[22],
+    rh_num[18], rh_num[19], rh_num[20], rh_num[21], rh_num[22]
   ),
-  [_MV] = LAYOUT_universal(
-    lh_mv[0], lh_mv[1], lh_mv[2], lh_mv[3], lh_mv[4], lh_mv[5],
-    rh_mv[0], rh_mv[1], rh_mv[2], rh_mv[3], rh_mv[4], rh_mv[5],
-    lh_mv[6], lh_mv[7], lh_mv[8], lh_mv[9], lh_mv[10], lh_mv[11],
-    rh_mv[6], rh_mv[7], rh_mv[8], rh_mv[9], rh_mv[10], rh_mv[11],
-    lh_mv[12], lh_mv[13], lh_mv[14], lh_mv[15], lh_mv[16], lh_mv[17],
-    rh_mv[12], rh_mv[13], rh_mv[14], rh_mv[15], rh_mv[16], rh_mv[17],
-    lh_mv[18], lh_mv[19], lh_mv[20], lh_mv[21], lh_mv[22],
-    rh_mv[18], rh_mv[19], rh_mv[20], rh_mv[21], rh_mv[22]
-  ),
-  [_FN] = LAYOUT_universal(
-    lh_fn[0], lh_fn[1], lh_fn[2], lh_fn[3], lh_fn[4], lh_fn[5],
-    rh_fn[0], rh_fn[1], rh_fn[2], rh_fn[3], rh_fn[4], rh_fn[5],
-    lh_fn[6], lh_fn[7], lh_fn[8], lh_fn[9], lh_fn[10], lh_fn[11],
-    rh_fn[6], rh_fn[7], rh_fn[8], rh_fn[9], rh_fn[10], rh_fn[11],
-    lh_fn[12], lh_fn[13], lh_fn[14], lh_fn[15], lh_fn[16], lh_fn[17],
-    rh_fn[12], rh_fn[13], rh_fn[14], rh_fn[15], rh_fn[16], rh_fn[17],
-    lh_fn[18], lh_fn[19], lh_fn[20], lh_fn[21], lh_fn[22],
-    rh_fn[18], rh_fn[19], rh_fn[20], rh_fn[21], rh_fn[22]
+  [_ADJUST] = LAYOUT_universal(
+    lh_adjust[0], lh_adjust[1], lh_adjust[2], lh_adjust[3], lh_adjust[4], lh_adjust[5],
+    rh_adjust[0], rh_adjust[1], rh_adjust[2], rh_adjust[3], rh_adjust[4], rh_adjust[5],
+    lh_adjust[6], lh_adjust[7], lh_adjust[8], lh_adjust[9], lh_adjust[10], lh_adjust[11],
+    rh_adjust[6], rh_adjust[7], rh_adjust[8], rh_adjust[9], rh_adjust[10], rh_adjust[11],
+    lh_adjust[12], lh_adjust[13], lh_adjust[14], lh_adjust[15], lh_adjust[16], lh_adjust[17],
+    rh_adjust[12], rh_adjust[13], rh_adjust[14], rh_adjust[15], rh_adjust[16], rh_adjust[17],
+    lh_adjust[18], lh_adjust[19], lh_adjust[20], lh_adjust[21], lh_adjust[22],
+    rh_adjust[18], rh_adjust[19], rh_adjust[20], rh_adjust[21], rh_adjust[22]
   )
 };
 // clang-format on
@@ -378,6 +371,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       tap_code(KC_UP);
       unregister_code(KC_LCTL);
     }
+    return false;
+  }
+  if (keycode == TK_SLEP && record -> event.pressed) {
+    tap_code16(LALT(LGUI(KC_EJCT)));
+    // register_code(KC_LALT);
+    // register_code(KC_LGUI);
+    // tap_code(KC_EJCT);
+    // unregister_code(KC_LGUI);
+    // unregister_code(KC_LALT);
     return false;
   }
   // コロン、セミコロン
