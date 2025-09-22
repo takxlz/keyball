@@ -112,7 +112,7 @@ void td_enns_finished(tap_dance_state_t *state, void *user_data) {
   } else {
     if (detected_host_os() == OS_WINDOWS) {
       tap_code(KC_LNG2);
-      tap_code(KC_F13);
+      tap_code(KC_F22);
     } else {
       tap_code(KC_LNG2);
     }
@@ -137,7 +137,7 @@ void td_jpns_finished(tap_dance_state_t *state, void *user_data) {
   } else {
     if (detected_host_os() == OS_WINDOWS) {
       tap_code(KC_LNG1);
-      tap_code(KC_F14);
+      tap_code(KC_F21);
     } else {
       tap_code(KC_LNG1);
     }
