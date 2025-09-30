@@ -21,7 +21,7 @@ enum custom_keycodes {
     TK_FWRD = SAFE_RANGE, // 進む
     TK_BACK,              // 戻る
     TK_MCTL,              // ミッションコントロール
-    TK_COLN,              // コロン、セミコロン
+    TK_SCLN,              // セミコロン、コロン
     TK_PLAS,              // プラス、アスタリスク
     TK_SLEP,              // スリープ
     TK_EISU,              // 英数
@@ -198,7 +198,7 @@ tap_dance_action_t tap_dance_actions[] = {
 /************************************************************ キー割り当て ************************************************************/
 // clang-format off
 // ショートカット
-#define SC_MTGUI MT(MOD_LGUI, KC_SCLN)
+#define SC_MTGUI MT(MOD_LGUI, KC_MINS)
 #define SC_MTALT MT(MOD_LALT, KC_SLSH)
 #define SC_LT3ENT LT(3, KC_ENT)
 // #define SC_MTCTL MT(MOD_LCTL, KC_ENT)
@@ -213,7 +213,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // ,-------------+-------------+-------------+-------------+-------------+-------------.         .-------------+-------------+-------------+-------------+-------------+-------------.
     KC_LCTL      , KC_A        , KC_S        , KC_D        , KC_F        , KC_G        ,          KC_H         , KC_J        , KC_K        , KC_L        , SC_MTGUI    , KC_QUOT     ,
 // ,-------------+-------------+-------------+-------------+-------------+-------------.         .-------------+-------------+-------------+-------------+-------------+-------------.
-    KC_LSFT      , KC_Z        , KC_X        , KC_C        , LT(3, KC_V) , KC_B        ,          KC_N         , KC_M        , KC_COMM     , KC_DOT      , SC_MTALT    , KC_MINS     ,
+    KC_LSFT      , KC_Z        , KC_X        , KC_C        , LT(3, KC_V) , KC_B        ,          KC_N         , KC_M        , KC_COMM     , KC_DOT      , SC_MTALT    , KC_SCLN     ,
 // ,-------------+-------------+-------------+-------------+-------------+-------------.         .-------------+-------------+-------------+-------------+-------------+-------------.
                    KC_LGUI     , KC_LALT     , TD(TD_ENNS) , KC_SPC      , TD(TD_MBTN) ,          SC_LT3ENT    , TD(TD_JPNS) , XXXXXXX     , XXXXXXX     , KC_ESC
 // ,              ---------------------------------------------------------------------.         .----------------------------------------------------------------------             .
@@ -235,11 +235,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // 数字、記号
   [2] = LAYOUT_universal(
 // ,-----------------------------------------------------------------------------------.         .-----------------------------------------------------------------------------------.
-    _______      , KC_GRV      , KC_7        , KC_8        , KC_9        , _______     ,          S(KC_8)      , KC_SLSH     , S(KC_9)     , S(KC_0)     , _______     , _______     ,
+    _______      , S(KC_LBRC)  , KC_7        , KC_8        , KC_9        , KC_EQL      ,          S(KC_QUOT)   , KC_SLSH     , S(KC_8)     , S(KC_9)     , _______     , _______     ,
 // ,-------------+-------------+-------------+-------------+-------------+-------------.         .-------------+-------------+-------------+-------------+-------------+-------------.
-    _______      , S(KC_GRV)   , KC_4        , KC_5        , KC_6        , KC_0        ,          S(KC_EQL)    , KC_MINS     , KC_LBRC     , KC_RBRC     , KC_BSLS     , _______     ,
+    _______      , KC_LBRC     , KC_4        , KC_5        , KC_6        , S(KC_EQL)   ,          S(KC_SCLN)   , KC_MINS     , KC_RBRC     , KC_NUHS     , KC_INT1     , _______     ,
 // ,-------------+-------------+-------------+-------------+-------------+-------------.         .-------------+-------------+-------------+-------------+-------------+-------------.
-    _______      , _______     , KC_1        , KC_2        , KC_3        , KC_0        ,          KC_EQL       , S(KC_MINS)  , S(KC_LBRC)  , S(KC_RBRC)  , S(KC_BSLS)  , KC_RSFT     ,
+    _______      , _______     , KC_1        , KC_2        , KC_3        , KC_0        ,          S(KC_MINS)   , S(KC_INT1)  , S(KC_RBRC)  , S(KC_NUHS)  , S(KC_INT3)  , KC_RSFT     ,
 // ,-------------+-------------+-------------+-------------+-------------+-------------.         .-------------+-------------+-------------+-------------+-------------+-------------.
                    _______     , _______     , KC_LSFT     , _______     , _______     ,          _______      , _______     , XXXXXXX     , XXXXXXX     , _______
 // ,              ---------------------------------------------------------------------.         .----------------------------------------------------------------------             .
@@ -347,13 +347,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // unregister_code(KC_LALT);
     return false;
   }
-  // コロン、セミコロン
-  if (keycode == TK_COLN && record -> event.pressed) {
+  // セミコロン、コロン
+  if (keycode == TK_SCLN && record -> event.pressed) {
     bool shift = get_mods() & MOD_MASK_SHIFT;
     if (shift) {
       uint8_t mods = get_mods();  // 現在のModifierの状態を保存
       del_mods(MOD_MASK_SHIFT);   // Shiftを外す
-      tap_code(KC_QUOT);          // コロン（del_modsによってShiftを外してアスタリスクからコロンにしている）
+      tap_code(KC_QUOT);          // コロン（del_modsによってShiftを外す）
       set_mods(mods);             // 元のModifier状態に戻す
     } else {
       tap_code(KC_SCLN);          // セミコロン
